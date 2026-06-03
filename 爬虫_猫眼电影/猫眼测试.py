@@ -15,6 +15,7 @@ class MaoYanMovie(object):
         # 存储所有爬取数据
         self.movie_data = []
         # 请求头：模拟浏览器访问，防止反爬
+        # "你的Cookie",  # 如果运行时被拦截，再替换成真实Cookie
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
             "cookie": "__mta=45530907.1780514883894.1780515730273.1780516201059.6; uuid_n_v=v1; uuid=55DF70D05F8211F1BFAEAD289BCE1CE2CE3523EF787A4EACAE964E51229B681A; _csrf=d01f24eb611248c9601b14a4b43093a1c3d20755caa4dd5a68dc1253af034ba3; Hm_lvt_e0bacf12e04a7bd88ddbd9c74ef2b533=1780514884; HMACCOUNT=582A1114C861AF28; _lx_utm=utm_source%3Dbing%26utm_medium%3Dorganic; _lxsdk_cuid=19e8ef508b1c8-0e8970383077b58-4c657b58-168000-19e8ef508b1c8; _lxsdk=55DF70D05F8211F1BFAEAD289BCE1CE2CE3523EF787A4EACAE964E51229B681A; _ga=GA1.1.225729017.1780514884; __mta=45530907.1780514883894.1780514883894.1780515208153.2; Hm_lpvt_e0bacf12e04a7bd88ddbd9c74ef2b533=1780516200; _ga_WN80P4PSY7=GS2.1.s1780514883$o1$g1$t1780516201$j59$l0$h0; _lxsdk_s=19e8ef508b1-154-c94-ea7%7C%7C12",
