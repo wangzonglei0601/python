@@ -26,21 +26,40 @@ class MaoYanMovie(object):
     def get_url(self):
         return "https://www.maoyan.com/board/4?offset={}".format((self.current_page - 1) * 10)
 
-    # 请求网页并返回BeautifulSoup解析对象
     def fetch(self):
         url = self.get_url()
-        try:
-            response = requests.get(url, headers=self.headers, timeout=5)
-            response.encoding = "utf-8"
-            # 判断是否触发猫眼验证
-            if "猫眼验证中心" in response.text:
-                print("⚠️ 被反爬拦截，需要更新Cookie")
+        max_retries =3
+        for attempt  in range(1,max_retries+1):
+            try:
+                print(f"第{attempt}请求")
+                response = requests.get(url, headers=self.headers,timeout=5)
+                response.encoding="utf-8"
+                if "猫眼验证中心" in response.text:
+                    print("⚠️ 被反爬拦截，需要更新Cookie")
+                    return None
+                return BeautifulSoup(response.text, "html.parser")
+            except Exception as e:
+                print(f"第{attempt}次请求失败{e}")
+                if attempt < max_retries:
+                    print(f"  等待 {attempt * 2} 秒后重试...")
+                    time.sleep(attempt * 2)
+                print(f"第 {self.current_page} 页请求失败，已重试 {max_retries} 次，跳过该页")
                 return None
-            # 返回解析后的soup对象
-            return BeautifulSoup(response.text, "html.parser")
-        except:
-            print("第{}页请求失败".format(self.current_page))
-            return None
+    # 请求网页并返回BeautifulSoup解析对象
+    # def fetch(self):
+    #     url = self.get_url()
+    #     try:
+    #         response = requests.get(url, headers=self.headers, timeout=5)
+    #         response.encoding = "utf-8"
+    #         # 判断是否触发猫眼验证
+    #         if "猫眼验证中心" in response.text:
+    #             print("⚠️ 被反爬拦截，需要更新Cookie")
+    #             return None
+    #         # 返回解析后的soup对象
+    #         return BeautifulSoup(response.text, "html.parser")
+    #     except:
+    #         print("第{}页请求失败".format(self.current_page))
+    #         return None
 
     # 解析网页数据
     def parse(self, soup):
