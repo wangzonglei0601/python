@@ -1,6 +1,5 @@
 # 去掉无用导入
 import sys
-
 import requests
 import time
 import csv
@@ -110,13 +109,16 @@ class MaoYanMovie(object):
                 print("等待5秒后重试...")
                 time.sleep(5)
         # 爬取完成，保存文件
-        self.save_to_csv(f"maoyan_{self.start_page}_{end_page}.csv")
+        self.save_to_csv(f"maoyan{self.start_page}—{end_page}.csv")
 
 if __name__ == "__main__":
     # 创建爬虫实例：从第1页开始，爬2页
     if len(sys.argv) >=3:
         start_page = int(sys.argv[1])
         max_page = int(sys.argv[2])
-        scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
+    else:
+        start_page = 1
+        max_page = 2
+    scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
     # 启动爬虫
-        scraper.run()
+    scraper.run()
