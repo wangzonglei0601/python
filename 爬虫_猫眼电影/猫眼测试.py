@@ -1,4 +1,6 @@
 # 去掉无用导入
+import sys
+
 import requests
 import time
 import csv
@@ -43,8 +45,8 @@ class MaoYanMovie(object):
                 if attempt < max_retries:
                     print(f"  等待 {attempt * 2} 秒后重试...")
                     time.sleep(attempt * 2)
-                print(f"第 {self.current_page} 页请求失败，已重试 {max_retries} 次，跳过该页")
-                return None
+        print(f"第 {self.current_page} 页请求失败，已重试 {max_retries} 次，跳过该页")
+        return None
     # 请求网页并返回BeautifulSoup解析对象
     # def fetch(self):
     #     url = self.get_url()
@@ -112,6 +114,9 @@ class MaoYanMovie(object):
 
 if __name__ == "__main__":
     # 创建爬虫实例：从第1页开始，爬2页
-    scraper = MaoYanMovie(start_page=1, max_page=2)
+    if len(sys.argv) >=3:
+        start_page = int(sys.argv[1])
+        max_page = int(sys.argv[2])
+        scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
     # 启动爬虫
-    scraper.run()
+        scraper.run()
