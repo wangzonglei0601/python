@@ -71,6 +71,10 @@ class Book(object):
                 self.parse_data(page_data)     # 解析数据
                 print(f"✅ 第 {page} 页处理完成\n")
                 time.sleep(1)  # 每页间隔1秒，友好爬取
+        #不生成空文件
+        if not self.result_data:
+            print("⚠️ 没有获取到任何数据，不生成空文件。")
+            return
         # 所有页面爬取完毕后保存文件
         self.save_to_json(f"{self.start_page}_{self.end_page}.json")
 
