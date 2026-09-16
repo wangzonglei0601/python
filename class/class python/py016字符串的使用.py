@@ -1,0 +1,10 @@
+city='天津'
+print('北京')
+print('欢迎你')
+print('北京\n欢迎你')
+print('北京\t欢迎你')
+print('北京\'欢迎你')
+print('北京\\欢迎你')
+print(r'北京\\欢迎你')
+print("北京\t欢迎你")
+print("000\t0")

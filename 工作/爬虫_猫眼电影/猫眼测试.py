@@ -104,21 +104,30 @@ class MaoYanMovie(object):
                 self.parse(soup)
                 # 页码+1，爬取下一页
                 self.current_page += 1
-            else:
-                # 请求失败，等待5秒重试
-                print("等待5秒后重试...")
-                time.sleep(5)
+            # else:
+            #     # 请求失败，等待5秒重试
+            #     print("等待5秒后重试...")
+            #     time.sleep(5)
         # 爬取完成，保存文件
-        self.save_to_csv(f"maoyan{self.start_page}—{end_page}.csv")
+        self.save_to_csv(f"maoyan_{self.start_page}_{end_page}.csv")
 
+# if __name__ == "__main__":
+#     # 创建爬虫实例：从第1页开始，爬2页
+#     if len(sys.argv) >=3:
+#         # sys.argv = sys.argv[0]
+#         start_page = int(sys.argv[1])
+#         max_page = int(sys.argv[2])
+#     else:
+#         start_page = 1
+#         max_page = 2
+#     scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
+#     # 启动爬虫
+#     scraper.run()
 if __name__ == "__main__":
-    # 创建爬虫实例：从第1页开始，爬2页
-    if len(sys.argv) >=3:
+    if len(sys.argv) >= 3:
         start_page = int(sys.argv[1])
         max_page = int(sys.argv[2])
+        scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
     else:
-        start_page = 1
-        max_page = 2
-    scraper = MaoYanMovie(start_page=start_page, max_page=max_page)
-    # 启动爬虫
+        scraper = MaoYanMovie(start_page=1, max_page=2)
     scraper.run()

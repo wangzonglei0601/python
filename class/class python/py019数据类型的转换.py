@@ -1,0 +1,10 @@
+ss =99
+print(int(ss))
+print(float(ss))
+print(str(ss))
+print("________________")
+print(chr(99))
+print(ord("c"))
+print(hex(ss))
+print(bin(ss))
+print(oct(ss))

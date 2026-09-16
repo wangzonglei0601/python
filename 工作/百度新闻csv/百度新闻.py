@@ -12,7 +12,7 @@ import json
 
 class BaiduHotSearch:
     """百度实时热搜爬虫类"""
-    def __init__(self):
+    def __init__(self,start_page,max_page):
         # 目标请求地址
         self.url = "https://top.baidu.com/board?tab=realtime"
         # 请求头，模拟浏览器访问
@@ -32,6 +32,8 @@ class BaiduHotSearch:
         self.timeout = 10
         # 存储最终爬取的数据列表
         self.data_list = []
+        self.start_page = start_page
+        self.max_page = max_page
 
     def fetch_html(self):
         """发送网络请求，获取网页源码"""
@@ -52,11 +54,12 @@ class BaiduHotSearch:
         # 初始化解析器
         soup = BeautifulSoup(html, "html.parser")
         # 选取前10条热搜条目
-        hot_item_list = soup.select(".category-wrap_iQLoo")[:10]
+        hot_item_list = soup.select(".category-wrap_iQLoo")
+        items = hot_item_list[self.start_page:self.max_page+self.start_page]
 
         try:
             # 遍历每条热搜，索引从1开始计数
-            for serial_num, item in enumerate(hot_item_list, start=1):
+            for serial_num, item in enumerate(items, start=1):
                 # 提取标题、热度、跳转链接
                 title = item.select_one(".c-single-text-ellipsis").text.strip()
                 hot_value = item.select_one(".hot-index_1Bl1a").text.strip()
@@ -75,33 +78,44 @@ class BaiduHotSearch:
     def save_to_csv(self, file_name):
         """将数据保存为CSV文件"""
         # 打开文件，写入csv数据
-        with open(file_name, "w", newline="", encoding="utf-8") as f:
+        with open(file_name, "w", newline="", encoding="utf-8-sig") as f:
         # json文件
             json.dump(self.data_list, f, ensure_ascii=False, indent=2)
         #     # 定义表头字段
         #     field_names = ["序号", "标题", "热度", "网址"]
-        #     csv_writer = csv.DictWriter(f, fieldnames=field_names)
+            # csv_writer = csv.DictWriter(f, fieldnames=field_names)
         #     # 写入表头
         #     csv_writer.writeheader()
         #     # 批量写入所有数据
         #     csv_writer.writerows(self.data_list)
-        # # 保存完成后打印数据
+        # 保存完成后打印数据
         self.print_data()
 
     def print_data(self):
         """在控制台打印爬取到的所有数据"""
-        print("\n开始打印爬取结果")
-        print("*" * 50)
+        print("\n" + "=" * 60)
+        print("📰 百度实时热搜榜单 (前 {} 条)".format(len(self.data_list)))
+        print("=" * 60)
         for item in self.data_list:
-            print(item["序号"], item["标题"], item["热度"], item["网址"])
-
+            print(f"🏅 序号：{item['序号']}")
+            print(f"📌 标题：{item['标题']}")
+            print(f"🔥 热度：{item['热度']}")
+            print(f"🔗 链接：{item['网址']}")
+            print("-" * 60)
 
 if __name__ == "__main__":
+    if len(sys.argv)>=3:
+        start_page = int(sys.argv[1])
+        max_page = int(sys.argv[2])
+    else:
+        start_page = 1
+        max_page = 10
     # 实例化爬虫对象
-    spider = BaiduHotSearch()
+    spider = BaiduHotSearch(start_page=start_page,max_page=max_page)
     # 1. 获取网页源码
     html_content = spider.fetch_html()
     # 2. 解析、保存、打印数据
     if html_content:
         spider.parse_html(html_content)
-        spider.save_to_csv("百度热点")
+        # spider.save_to_csv(f"{start_page}_{max_page}.csv")
+        spider.save_to_csv(f"{spider.start_page}_{spider.max_page}.json")
